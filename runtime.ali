@@ -1,0 +1,135 @@
+V "GNAT Lib v4.8"
+A -gnat2012
+P SS ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_NESTED_FINALIZATION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV SPARK
+
+U runtime%b		runtime.adb		70eae6d2 NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W system%s		system.ads		system.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+U runtime%s		runtime.ads		14a0e165 EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+W algorithm%s		algorithm.adb		algorithm.ali
+W figure%s		figure.adb		figure.ali
+W figure_list%s		figure_list.adb		figure_list.ali
+W protocol%s		protocol.adb		protocol.ali
+W tja%s			tja.ads			tja.ali
+W tja.sockets%s		tja-sockets.adb		tja-sockets.ali
+
+D ada.ads		20070406091342 3ffc8e18
+D a-calend.ads		20120515092648 d86d6c8c
+D a-charac.ads		20070912115821 2d3ec45b
+D a-chlat1.ads		20070912115821 2825df20
+D a-contai.ads		20101025135029 61e5e089
+D a-cdlili.ads		20120217141546 c8476eef
+D a-except.ads		20120716125141 10fcae55
+D a-finali.ads		20111121113555 52ecdc1b
+D a-flteio.ads		20070406091342 e18a47a0
+D a-inteio.ads		20070406091342 f64b89a4
+D a-ioexce.ads		20091130110856 8b9de6cd
+D a-iteint.ads		20110906092602 7c7305e9
+D a-stream.ads		20090409150019 2ca4ee37
+D a-string.ads		20070406091342 90ac6797
+D a-strmap.ads		20090409150019 9cb836fb
+D a-strunb.ads		20110829130134 fe8d9a91
+D a-tags.ads		20111212115430 6c0509d0
+D a-textio.ads		20130104124955 386df5d4
+D a-tiflio.ads		20090409150019 56fbda09
+D a-tiinio.ads		20090409150019 aa04e5d6
+D a-unccon.ads		20070406091342 f9eb8f06
+D a-uncdea.ads		20070406091342 f15a5ed1
+D algorithm.ads		20130408151344 320e8751
+D figure.ads		20130409123209 b99205ff
+D figure_list.ads	20130409140633 30ff8f69
+D geometry.ads		20130228160635 e83adbf0
+D gnat.ads		20110801150502 fd2ad2f1
+D g-socket.ads		20121001131822 0c5639de
+D interfac.ads		20110906094621 129923ea
+D i-c.ads		20110801143639 5421119b
+D i-cstrea.ads		20130102105938 3286f6aa
+D protocol.ads		20130409141009 c50cb7c4
+D runtime.ads		20130408151304 f4012131
+D runtime.adb		20130408151711 bc863237
+D shape.ads		20130408164705 15eb61a6
+D system.ads		20120806081210 fc21e9b1
+D s-crtl.ads		20130102105938 1ea48bce
+D s-exctab.ads		20090417131547 66e51330
+D s-ficobl.ads		20120709130952 55a71d43
+D s-finmas.ads		20111024091915 b95bb341
+D s-finroo.ads		20120426095924 4ff27390
+D s-oscons.ads		20130325203213 77f24e6a
+D s-parame.ads		20110830140625 b6e20cc0
+D s-pooglo.ads		20110804083314 542f33d0
+D s-secsta.ads		20110830140625 eea35a36
+D s-soflin.ads		20120515094619 24c8153c
+D s-stache.ads		20090417130712 596fc1b4
+D s-stalib.ads		20130104124955 f78bcf95
+D s-stoele.ads		20090417130712 facd7d98
+D s-stoele.adb		20100617152355 afc5dc80
+D s-stopoo.ads		20111013103733 7b8fbeee
+D s-stposu.ads		20121005142121 ffeba1c5
+D s-stratt.ads		20100909123135 aedef97e
+D s-traent.ads		20090417130712 5221ee41
+D s-unstyp.ads		20090409150019 6ae15c76
+D s-wchcon.ads		20090417130712 bfeb2e3d
+D tja.ads		20050223121530 986c418a
+D tja-calendar.ads	20120314083629 0abafb28
+D tja-sockets.ads	20130304141702 6043e0c6
+D util.ads		20130408145139 b70e8815
+X 1 ada.ads
+16K9*Ada 19e8 33|7r6 11r24 34|1r6 1r23
+X 14 a-string.ads
+16K13*Strings 35e16 33|7r10 11r28
+X 16 a-strunb.ads
+39K21*Unbounded 437e26 33|7w18 11r36
+57V13*To_Unbounded_String{42R9} 34|13s32
+X 18 a-textio.ads
+49K13*Text_IO 471e16 34|1w10 1r27
+242U14*Put 34|19s15 21s16
+X 23 algorithm.ads
+4K9*Algorithm 9e14 33|5w6 5r23
+6U14*Solve 34|15s13
+X 24 figure.ads
+15K9*Figure 55e11 33|4w6 4r23
+X 25 figure_list.ads
+16K9*Figure_List 41e16 33|3w6 3r23
+22R9*Figure_List_Type 39e17 34|6r18
+X 32 protocol.ads
+9K9*Protocol 68e13 33|2w6 2r23
+15V13*Init{59|58R8} 34|13s23
+16V13*Receive_Parts{25|22R9} 34|14s26
+17V13*Receive_Figure{24|16R9} 34|15s30
+19U14*Send_Solution 34|16s13
+20V13*Receive_Answer{boolean} 34|17s24
+X 33 runtime.ads
+10K9*Runtime 14l5 14e12 34|3b14 34l5 34t12
+11K12*Str=11:36 34|13r28
+12U14*Run 34|5b14 31l8 31t11
+X 34 runtime.adb
+6r7 Part_List{25|22R9} 14m13 15r19 16m35 16r35
+7r7 Socket{59|58R8} 13m13 14r40 15r45 16r27 17r39
+9b7 Correct{boolean} 17m13 18r16
+X 57 tja.ads
+36K9*TJa 33|1r6 1r23 57|50e8
+X 59 tja-sockets.ads
+44K13*Sockets 33|1w10 1r27 59|255e16
+58R8*Socket_Type 34|7r16 59|251e16
+

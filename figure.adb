@@ -1,13 +1,11 @@
-with Geometry; use Geometry;
-with Shape;    use Shape;
+
 
 package body Figure is
-begin
    --|--------------------------------------------------------------------------
    --| Translate
    --| Takes:
-   --|   - Figure_Type : The figure to transform
-   --|   - DX, DY, DZ  : The amount of steps to translate the figure
+   --| - Figure_Type : The figure to transform
+   --| - DX, DY, DZ : The amount of steps to translate the figure
    --|--------------------------------------------------------------------------
    procedure Translate(Figure : in out Figure_Type; DX, DY, DZ : in Integer) is
    begin
@@ -24,7 +22,7 @@ begin
    procedure Rotate(Figure : in out Figure_Type; Axis : in Axis_Enum;
                     Steps : in Integer := 1) is
    begin
-      Rotate(Figure.Shape, Axis, Steps);
+      Figure.Shape := Rotate(Figure.Shape, Axis, Steps);
    end Rotate;
 
    --|--------------------------------------------------------------------------
@@ -40,13 +38,13 @@ begin
    --|--------------------------------------------------------------------------
    function "=" (Left, Right : Figure_Type) return Boolean is
    begin
-      return (Left.Id = Right.Id); -- Definitionsfråga, hur ska det fungera?
+      return (Left.Id = Right.Id); -- Definitionsfråga, hur ska det fungera? bra fråga.
    end "=";
 
    --|--------------------------------------------------------------------------
    function Difference(Source, Subtractor : Figure_Type) return Figure_Type is
-      T_Shape1 : Shape_Matrix := Shapeify(Figure1, Figure2);
-      T_Shape2 : Shape_Matrix := Shapeify(Figure2, Figure1);
+      T_Shape1 : Shape_Matrix := Shapeify(Source, Subtractor);
+      T_Shape2 : Shape_Matrix := Shapeify(Subtractor, Source);
    begin
 
       return Shape_To_Figure(T_Shape1 - T_Shape2);
@@ -62,23 +60,20 @@ begin
    end Union;
 
    --|--------------------------------------------------------------------------
-   function Contains(Figure1, Figure2 : Figure_Type) return Boolean is
-   begin
+   --function Contains(Figure1, Figure2 : Figure_Type) return Boolean is
+   --begin
+   --   return True; --TODO
+   --end Contains;
 
-   end Contains;
-
-   function Intersect(Figure : in Figure_Type) return Shape_Type is
-      T_Shape1 : Shape_Matrix := Shapeify(Figure1, Figure2);
-      T_Shape2 : Shape_Matrix := Shapeify(Figure2, Figure1);
-   begin
-
-      return Shape_To_Figure(Intersect(T_Shape1), Inverse(T_Shape2));
-   end Intersect;
+   --function Intersect(Figure : in Figure_Type) return Shape_Matrix is
+   --begin
+      
+   --end Intersect;
 
    --|--------------------------------------------------------------------------
    function Volume(Figure : in Figure_Type) return Integer is
    begin
-      Volume(Figure.Shape);
+      return Volume(Figure.Shape);
    end Volume;
 
    --|--------------------------------------------------------------------------
@@ -96,34 +91,33 @@ begin
    end Fits;
 
    --|--------------------------------------------------------------------------
-   function Shapeify(Source, Relative : in Figure_Type) return Shape_Type is
-      Max_X : Integer := Max(Size(Source.Shape, AXIS_X) + Source.Pos(AXIS_X),
+   function Shapeify(Source, Relative : in Figure_Type) return Shape_Matrix is
+      Max_X : Integer := Integer'Max(Size(Source.Shape, AXIS_X) + Source.Pos(AXIS_X),
                              Size(Relative.Shape, AXIS_X) + Relative.Pos(AXIS_X));
-      Max_Y : Integer := Max(Size(Source.Shape, AXIS_Y) + Source.Pos(AXIS_Y),
+      Max_Y : Integer := Integer'Max(Size(Source.Shape, AXIS_Y) + Source.Pos(AXIS_Y),
                              Size(Relative.Shape, AXIS_Y) + Relative.Pos(AXIS_Y));
-      Max_Z : Integer := Max(Size(Source.Shape, AXIS_Z) + Source.Pos(AXIS_Z),
+      Max_Z : Integer := Integer'Max(Size(Source.Shape, AXIS_Z) + Source.Pos(AXIS_Z),
                              Size(Relative.Shape, AXIS_Z) + Relative.Pos(AXIS_Z));
 
       Size_Vector : Axis_Vector;
-      T_Shape1    : Shape_Matrix;
    begin
       Size_Vector(AXIS_X) := Max_X;
       Size_Vector(AXIS_Y) := Max_Y;
       Size_Vector(AXIS_Z) := Max_Z;
 
-      return Standardize(Source.Size, Size_Vector, Source.Pos);
-   end Equalize;
+      return Standardize(Source.Shape, Size_Vector, Source.Pos);
+   end Shapeify;
 
    function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Type is
-      T_Figure : Figure(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
+      T_Figure : Figure_Type(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
    begin
-      T_Figure.id := id;
+      T_Figure.id := Id;
       return T_Figure;
    end New_Figure;
 
    --|--------------------------------------------------------------------------
-   function Shape_To_Figure(Shape : in Shape_Type) return Figure_Type is
-      T_Figure : Figure;
+   function Shape_To_Figure(Shape : in Shape_Matrix) return Figure_Type is
+      --T_Figure : Figure_Type(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
       Offset : Axis_Vector := (999, 999, 999);
       Size : Axis_Vector := (0, 0, 0);
    begin
@@ -132,20 +126,20 @@ begin
             for Z in Integer range Shape'Range(3) loop
                -- X
                if Shape(X, Y, Z) and Z < Offset(AXIS_Z) then
-                  Offset(AXIS_Z);
-               elsif not Shape(X, Y, Z) and Z > Size(AXIS_Z)) then
+                  Offset(AXIS_Z) := Z;
+               elsif not Shape(X, Y, Z) and Z > Size(AXIS_Z) then
                   Size(AXIS_Z) := Z;
                end if;
                -- Y
                if Shape(X, Y, Z) and Y < Offset(AXIS_Y) then
-                  Offset(AXIS_Y);
-               elsif not Shape(X, Y, Z) and Y > Size(AXIS_Y)) then
+                  Offset(AXIS_Y) := Y;
+               elsif not Shape(X, Y, Z) and Y > Size(AXIS_Y) then
                   Size(AXIS_Y) := Y;
                end if;
                -- Z
                if Shape(X, Y, Z) and X < Offset(AXIS_X) then
-                  Offset(AXIS_X);
-               elsif not Shape(X, Y, Z) and X > Size(AXIS_X)) then
+                  Offset(AXIS_X) := X;
+               elsif not Shape(X, Y, Z) and X > Size(AXIS_X) then
                   Size(AXIS_X) := X;
                end if;
             end loop;
@@ -158,5 +152,13 @@ begin
 
       return New_Figure(Subshape(Shape, Size, Offset));
    end Shape_To_Figure;
+   
 
+   function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer is  
+   begin
+      return R_Figure.Rotations(Axis);
+   end Get_Rotation;
+   
+  
+   
 end Figure;

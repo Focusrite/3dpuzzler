@@ -13,19 +13,30 @@
 with Ada.Containers.Doubly_Linked_Lists;
 with Figure; use Figure;
 
-package Figure_List is 
-   package Figures is new Ada.Containers.Doubly_Linked_Lists(Figure_Type);
+package Figure_List is
+   type Figure_Access is access all Figure_Type;
+   package Figures is new Ada.Containers.Doubly_Linked_Lists(Figure_Access);
    -- use Figures;
    
+   --Figure_List_Type : renames Figures.List;
    type Figure_List_Type is private;
    
-   procedure Append(List : Figure_List_Type; Figure : Figure_Type);
-   procedure Remove(List : Figure_List_Type; Figure : Figure_Type);
-   procedure Insert(List : Figure_List_Type; Position : Integer; Figure : Figure_Type);
-   function Member(List : Figure_List_Type; Figure : Figure_Type) return Boolean;
+   procedure Append(List : in Figure_List_Type; Figure : Figure_Type);
+   procedure Remove(List : in Figure_List_Type; Figure : Figure_Type);
+   procedure Insert(List : in Figure_List_Type; Position : Integer; Figure : Figure_Type);
+   function First(List : in out Figure_List_Type) return Figure_Access;
+   function Member(List : in Figure_List_Type; Figure : Figure_Type) return Boolean;
+   function Last_Element(List : in Figure_List_Type) return Figure_Type;
+   function Next(List: in out Figure_List_Type) return Figure_Access;
    
 private
    
-   subtype Figure_List_Type is Figures.List;
+   
+   type Figure_List_Type is
+      record
+	 L : Figures.List;
+	 C : Figures.Cursor;
+      end record;
    
 end Figure_List;
+ 

@@ -9,10 +9,11 @@
 --| The functions and procedures handles and manipulates the geometric part of Figures,
 --| aswell as interactions betweem figures.
 --|-------------------------------------------------------------------------------------------
+with Shape;    use Shape;
 with Geometry; use Geometry;
 
 package Figure is
-   type Figure_Type(<>) is private;
+   type Figure_Type(Xt, Yt, Zt : Integer) is private; --(<>)
 
    procedure Translate(Figure : in out Figure_Type; DX, DY, DZ : in Integer);
    procedure Rotate(Figure : in out Figure_Type; Axis : in Axis_Enum;
@@ -25,20 +26,21 @@ package Figure is
 
    function Union(Figure1, Figure2 : Figure_Type) return Figure_Type;
 
-   function Contains(Figure1, Figure2 : Figure_Type) return Boolean;
+   --function Contains(Figure1, Figure2 : Figure_Type) return Boolean;
 
-   function Intersect(Figure : in Figure_Type) return Shape_Type;
+   --function Intersect(Figure : in Figure_Type) return Shape_Matrix;
    function Volume(Figure : in Figure_Type) return Integer;
 
    function Overlaps(Figure1, Figure2 : in Figure_Type) return Boolean;
    function Fits(Figure1, Figure2 : in Figure_Type) return Boolean;
 
-   function Equalize(Figure1, Figure2 : in Figure_Type) return Figure_Type;
+   function Shapeify(Source, Relative : in Figure_Type) return Shape_Matrix;
 
-   function Shape_To_Figure(Shape : in Shape_Type) return Figure_Type;
+   function Shape_To_Figure(Shape : in Shape_Matrix) return Figure_Type;
 
-   function New_Figure(Xt, Xy, Zt : in Integer) return Figure_Type;
-
+   function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Type;
+   
+   function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer;
 private
    type Figure_Type(Xt, Yt, Zt : Integer) is
       record
