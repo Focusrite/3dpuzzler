@@ -5,6 +5,7 @@ with Util;                  use Util;
 with Figure;                use Figure;
 with Figure_List;           use Figure_List;
 with Geometry;              use Geometry;
+with Shape;                 use Shape;
 
 package Protocol is
    
@@ -14,11 +15,11 @@ package Protocol is
    
    function Init(Nickname : Str.Unbounded_String) return Socket_Type;
    function Receive_Parts(Socket: in Socket_Type) return Figure_List_Type;
-   function Receive_Figure(Socket: in Socket_Type) return Figure_Type;
+   function Receive_Figure(Socket: in Socket_Type) return Figure_Access;
    procedure Give_Up(Socket: in Socket_Type; Number: in Integer);
-   procedure Send_Solution(Socket: in Socket_Type; Part_List: in out Figure_List_Type);
+   procedure Send_Solution(Socket: in Socket_Type; List: in out Figure_List_Type; Figure: in Figure_Access);
    function Receive_Answer(Socket: in Socket_Type) return Boolean;
-   
+   function Build_Shape(Shape_Str : Unbounded_String; X, Y, Z : Integer) return Shape_Matrix;
    
    
    -- Exceptions
@@ -50,7 +51,9 @@ private
    --procedure Interpret_Terminate(Message : in Message_Type);
    procedure Interpret_Initiation(Message : in Message_Type);
    
-   function Solution_Message_Str(Solved_Figure_List: in out Figure_List_Type) return Unbounded_String;
+   procedure Solution_Message_Str(Solved_Figure_List: in out Figure_List_Type;
+				  Figure: in Figure_Access;
+				  O_String : out Unbounded_String);
    
    procedure Figure_Header_And_Number(Figure_Message: in Message_Type; Figure_Number: out Integer);
    

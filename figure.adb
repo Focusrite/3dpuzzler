@@ -42,7 +42,7 @@ package body Figure is
    end "=";
 
    --|--------------------------------------------------------------------------
-   function Difference(Source, Subtractor : Figure_Type) return Figure_Type is
+   function Difference(Source, Subtractor : Figure_Type) return Figure_Access is
       T_Shape1 : Shape_Matrix := Shapeify(Source, Subtractor);
       T_Shape2 : Shape_Matrix := Shapeify(Subtractor, Source);
    begin
@@ -51,7 +51,7 @@ package body Figure is
    end Difference;
 
    --|--------------------------------------------------------------------------
-   function Union(Figure1, Figure2 : Figure_Type) return Figure_Type is
+   function Union(Figure1, Figure2 : Figure_Type) return Figure_Access is
       T_Shape1 : Shape_Matrix := Shapeify(Figure1, Figure2);
       T_Shape2 : Shape_Matrix := Shapeify(Figure2, Figure1);
    begin
@@ -108,15 +108,15 @@ package body Figure is
       return Standardize(Source.Shape, Size_Vector, Source.Pos);
    end Shapeify;
 
-   function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Type is
-      T_Figure : Figure_Type(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
+   function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Access is
+      T_Figure : Figure_Access := new Figure_Type(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
    begin
       T_Figure.id := Id;
       return T_Figure;
    end New_Figure;
 
    --|--------------------------------------------------------------------------
-   function Shape_To_Figure(Shape : in Shape_Matrix) return Figure_Type is
+   function Shape_To_Figure(Shape : in Shape_Matrix) return Figure_Access is
       --T_Figure : Figure_Type(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
       Offset : Axis_Vector := (999, 999, 999);
       Size : Axis_Vector := (0, 0, 0);
@@ -159,6 +159,10 @@ package body Figure is
       return R_Figure.Rotations(Axis);
    end Get_Rotation;
    
-  
+   function Get_Id(Figure: in Figure_Access) return Integer is
+   begin
+      return Figure.Id;
+   end Get_Id;
+   
    
 end Figure;

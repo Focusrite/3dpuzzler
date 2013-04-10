@@ -14,7 +14,8 @@ with Geometry; use Geometry;
 
 package Figure is
    type Figure_Type(Xt, Yt, Zt : Integer) is private; --(<>)
-
+   type Figure_Access is access all Figure_Type;
+   
    procedure Translate(Figure : in out Figure_Type; DX, DY, DZ : in Integer);
    procedure Rotate(Figure : in out Figure_Type; Axis : in Axis_Enum;
                     Steps : in Integer := 1);
@@ -22,9 +23,9 @@ package Figure is
    function Center(Figure : in Figure_Type) return Axis_Vector;
    function "=" (Left, Right : Figure_Type) return Boolean;
 
-   function Difference(Source, Subtractor : Figure_Type) return Figure_Type;
+   function Difference(Source, Subtractor : Figure_Type) return Figure_Access;
 
-   function Union(Figure1, Figure2 : Figure_Type) return Figure_Type;
+   function Union(Figure1, Figure2 : Figure_Type) return Figure_Access;
 
    --function Contains(Figure1, Figure2 : Figure_Type) return Boolean;
 
@@ -36,11 +37,13 @@ package Figure is
 
    function Shapeify(Source, Relative : in Figure_Type) return Shape_Matrix;
 
-   function Shape_To_Figure(Shape : in Shape_Matrix) return Figure_Type;
+   function Shape_To_Figure(Shape : in Shape_Matrix) return Figure_Access;
 
-   function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Type;
+   function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Access;
    
    function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer;
+   
+   function Get_Id(Figure: Figure_Access) return Integer;
 private
    type Figure_Type(Xt, Yt, Zt : Integer) is
       record
