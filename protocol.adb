@@ -83,7 +83,7 @@ package body Protocol is
 	 exit when Last_Element(Solved_Figure_List) = Current_Part.all;
 	 Next(Solved_Figure_List, Current_Part);
       end loop;
-      O_String := To_Unbounded_String(Id_String(2..Id_String'Last) & Slice(Resultstr, 2, Length(Resultstr)));
+      O_String := To_Unbounded_String(Id_String(2..Id_String'Last)) & Resultstr;
    end Solution_Message_Str;
    
    procedure Send_Solution(Socket: in Socket_Type; List: in out Figure_List_Type; Figure: in Figure_Access) is
