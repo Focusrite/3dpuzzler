@@ -15,14 +15,17 @@ package Protocol is
    
    function Init(Nickname : Str.Unbounded_String) return Socket_Type;
    function Receive_Parts(Socket: in Socket_Type) return Figure_List_Type;
-   function Receive_Figure(Socket: in Socket_Type) return Figure_Access;
+   function Receive_Figure(Figure_Message: in Message_Type) return Figure_Access;
    procedure Give_Up(Socket: in Socket_Type; Number: in Integer);
    procedure Send_Solution(Socket: in Socket_Type; List: in out Figure_List_Type; Figure: in Figure_Access);
    function Receive_Answer(Socket: in Socket_Type) return Boolean;
    function Build_Shape(Shape_Str : Unbounded_String; X, Y, Z : Integer) return Shape_Matrix;
+   procedure Listen_Next(Socket: in Socket_Type; Figure: out Figure_Access; Is_Done: out Boolean);
+   procedure Listen_End(Socket: in Socket_Type);
    
    
    -- Exceptions
+   Server_Terminate: Exception;
    Rejected_By_Server: Exception;
    Wrong_Header: Exception;
    
@@ -63,6 +66,7 @@ private
    procedure Send(Socket : in Socket_Type; Message : in Message_Type);
    
    -- Util
+   procedure Print_Done(Message: in Message_Type);
    procedure Extract_Dimensions(Dim_String: in String; X: out Integer; Y: out Integer; Z: out Integer);
    procedure Handle_New_Nick(Socket: in Socket_Type);
    procedure Prompt_Nick(Nickname: out String);

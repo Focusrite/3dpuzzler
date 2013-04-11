@@ -18,6 +18,11 @@ package body Protocol is
       Msg.Time	  := To_Time_Type(Slice(Msg_S, 1, 8));
       Msg.Header  := Slice(Msg_S, 9, 10)(10);
       Msg.Message := To_Unbounded_String(Slice(Msg_S, 12, Length(Msg_S)));
+      
+      if Msg.Header = 'T' then
+	 raise Server_Terminate with To_String(Msg.Message);
+      end if;
+      
       return Msg;
    end To_Message;
 
@@ -123,16 +128,87 @@ package body Protocol is
    end Figure_Header_And_Number;
    
    function Receive_Answer(Socket: in Socket_Type) return Boolean is 
+      Msg: Message_Type;
+      Fig_Num: Integer;
+      Space_Between_Index: Integer;
+      Answer_String: Unbounded_String;
    begin
-      Put("Received Answer;");
-      return TRUE;
+      Msg := Get_Message(Socket);
+      
+      if Msg.Header /= 'A' then
+	 raise Wrong_Header;
+      end if;
+      Space_Between_Index := Next_Space_Index(Msg.Message, 1);
+      
+      Fig_Num := Integer'Value(Slice(Msg.Message, 1, Space_Between_Index - 1));
+      Answer_String := To_Unbounded_String(Slice(Msg.Message,
+						 Space_Between_Index + 1,
+						 Length(Msg.Message)));
+      ------DEBUG-----
+      Put("Received Answer on fig ");
+      Put(Fig_Num, 0);
+      Put(": ");
+      Put(To_String(Answer_String));
+      New_Line;
+      ----------------
+      if Answer_String = "CORRECT" then
+	 return TRUE;
+      else 
+	 return FALSE;
+      end if;
    end Receive_Answer;
    
+   procedure Print_Done(Message: in Message_Type) is
+      
+   begin
+      Put("Fått Done!");
+      New_Line;
+      ---- OPT TODO: printa antal korrekta och inkorrekta!
+   end Print_Done;
    
+   procedure Listen_Next(Socket: in Socket_Type; Figure: out Figure_Access; Is_Done: out Boolean) is
+      Message: Message_Type;
+   begin
+      Put("Innan Get i Listen_Next");
+      New_Line;
+      Message := Get_Message(Socket);
+      Put("Efter Get");
+      New_Line;
+      Is_Done := FALSE;
+      if Message.Header = 'F' then
+	 Figure := Receive_Figure(Message);
+      elsif Message.Header = 'D' then
+	 Print_Done(Message);
+	 Is_Done := TRUE;
+      end if;
+   end Listen_Next;
+   
+   function Get_Hs_Pos(Msg: in Unbounded_String) return Integer is
+   begin
+      return Integer'Value(Slice(Msg, 1, Length(Msg)));
+   end Get_Hs_Pos;
+   
+       
+   
+   procedure Listen_End(Socket: in Socket_Type) is
+      Message: Message_Type;
+   begin
+      Message := Get_Message(Socket);
+      if Message.Header = 'U' then
+	 Put("Fått en High-Score-uppdatering: ");
+	 Put(Get_Hs_Pos(Message.Message), 0);
+	 New_Line;
+      elsif Message.Header = 'O' then
+	 Put("Har fått en All done! Hs-position: ");
+	 Put(Get_Hs_Pos(Message.Message), 0);
+	 New_Line;
+      else
+	 raise Wrong_Header;
+      end if;
+   end Listen_End;
    
    --Receives the a figure from the server, returns it
-   function Receive_Figure(Socket: in Socket_Type) return Figure_Access is
-      Figure_Message: Message_Type;
+   function Receive_Figure(Figure_Message: in Message_Type) return Figure_Access is
       Msg: Unbounded_String;
       Shape_String: Unbounded_String;
       --	Dim_String: Unbounded_String; ta bort
@@ -145,8 +221,6 @@ package body Protocol is
       Figure_Number: Integer;
 
    begin
-      Put(To_String(Figure_Message.Message));
-      Figure_Message := Get_Message(Socket);
       Msg := Figure_Message.Message;
       Figure_Header_And_Number(Figure_Message, Figure_Number); --raises header exc if wrong
             
@@ -159,7 +233,6 @@ package body Protocol is
       Shape_String := To_Unbounded_String(Slice(Msg, Start_Shape_Index, End_Shape_Index));
       
       return New_Figure(Build_Shape(Shape_String, Dim_X, Dim_Y, Dim_Z), Figure_Number); 
-      --Dummy-funktion! Se över detta med de andra!
    end Receive_Figure;
    
    

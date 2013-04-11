@@ -22,12 +22,12 @@ package body Figure is
    procedure Rotate(Figure : in out Figure_Type; Axis : in Axis_Enum;
                     Steps : in Integer := 1) is
    begin
-      Figure.Shape := Rotate(Figure.Shape, Axis, Steps);
+      Figure.Shape.all := Rotate(Figure.Shape.all, Axis, Steps);
    end Rotate;
 
    --|--------------------------------------------------------------------------
    function Center(Figure : in Figure_Type) return Axis_Vector is
-      T_Axis : Axis_Vector := Center(Figure.Shape);
+      T_Axis : Axis_Vector := Center(Figure.Shape.all);
    begin
       T_Axis(AXIS_X) := T_Axis(AXIS_X) + Figure.Pos(AXIS_X);
       T_Axis(AXIS_Y) := T_Axis(AXIS_Y) + Figure.Pos(AXIS_Y);
@@ -73,7 +73,7 @@ package body Figure is
    --|--------------------------------------------------------------------------
    function Volume(Figure : in Figure_Type) return Integer is
    begin
-      return Volume(Figure.Shape);
+      return Volume(Figure.Shape.all);
    end Volume;
 
    --|--------------------------------------------------------------------------
@@ -87,17 +87,17 @@ package body Figure is
    --|--------------------------------------------------------------------------
    function Fits(Figure1, Figure2 : in Figure_Type) return Boolean is
    begin
-      return Fits(Figure1.Shape, Figure2.Shape); --or Fits(Figure2.Shape, Figure1.Shape);
+      return Fits(Figure1.Shape.all, Figure2.Shape.all); --or Fits(Figure2.Shape, Figure1.Shape);
    end Fits;
 
    --|--------------------------------------------------------------------------
    function Shapeify(Source, Relative : in Figure_Type) return Shape_Matrix is
-      Max_X : Integer := Integer'Max(Size(Source.Shape, AXIS_X) + Source.Pos(AXIS_X),
-                             Size(Relative.Shape, AXIS_X) + Relative.Pos(AXIS_X));
-      Max_Y : Integer := Integer'Max(Size(Source.Shape, AXIS_Y) + Source.Pos(AXIS_Y),
-                             Size(Relative.Shape, AXIS_Y) + Relative.Pos(AXIS_Y));
-      Max_Z : Integer := Integer'Max(Size(Source.Shape, AXIS_Z) + Source.Pos(AXIS_Z),
-                             Size(Relative.Shape, AXIS_Z) + Relative.Pos(AXIS_Z));
+      Max_X : Integer := Integer'Max(Size(Source.Shape.all, AXIS_X) + Source.Pos(AXIS_X),
+                             Size(Relative.Shape.all, AXIS_X) + Relative.Pos(AXIS_X));
+      Max_Y : Integer := Integer'Max(Size(Source.Shape.all, AXIS_Y) + Source.Pos(AXIS_Y),
+                             Size(Relative.Shape.all, AXIS_Y) + Relative.Pos(AXIS_Y));
+      Max_Z : Integer := Integer'Max(Size(Source.Shape.all, AXIS_Z) + Source.Pos(AXIS_Z),
+                             Size(Relative.Shape.all, AXIS_Z) + Relative.Pos(AXIS_Z));
 
       Size_Vector : Axis_Vector;
    begin
@@ -105,13 +105,15 @@ package body Figure is
       Size_Vector(AXIS_Y) := Max_Y;
       Size_Vector(AXIS_Z) := Max_Z;
 
-      return Standardize(Source.Shape, Size_Vector, Source.Pos);
+      return Standardize(Source.Shape.all, Size_Vector, Source.Pos);
    end Shapeify;
 
    function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Access is
-      T_Figure : Figure_Access := new Figure_Type(Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
+      T_Figure : Figure_Access := new Figure_Type;
    begin
       T_Figure.id := Id;
+      Preload_Rotations(T_Figure.all, Shape);
+      T_Figure.Shape := T_Figure.Rotation_List(1).Shape;
       return T_Figure;
    end New_Figure;
 
@@ -156,7 +158,7 @@ package body Figure is
 
    function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer is  
    begin
-      return R_Figure.Rotations(Axis);
+      return R_Figure.Rotation_List(R_Figure.Rotation_Id).Rotation(Axis);
    end Get_Rotation;
    
    function Get_Id(Figure: in Figure_Access) return Integer is
@@ -164,5 +166,26 @@ package body Figure is
       return Figure.Id;
    end Get_Id;
    
+   --|---------------------------------------------------------------------------
+   procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix) is
+      -- T_Shape : aliased Shape_Matrix;
+      X, Y, Z : Integer := 0;
+   begin
+      for I in Integer range Figure.Rotation_List'Range loop
+	 X := X + 1;
+	 if X = 4 then
+	    X := 0;
+	    Y := Y + 1;
+	    if Y = 3 then
+	       Y := 0;
+	       Z := Z + 1;
+	    end if;
+	 end if;
+	 Figure.Rotation_List(I).Rotation := (X, Y, Z);
+	 -- T_Shape := Rotate(Shape, Figure.Rotation_List(I).Rotation);
+	 Figure.Rotation_List(I).Shape := Rotate(Shape, Figure.Rotation_List(I).Rotation); 
+	 -- Might have to change to return a pointer instead 
+      end loop;
+   end Preload_Rotations;
    
 end Figure;

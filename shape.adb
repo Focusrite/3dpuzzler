@@ -234,4 +234,15 @@ package body Shape is
       end if;
       return 0;
    end Size;
+   
+   --|----------------------------------------------------------------------------------
+   function Rotate(Shape : Shape_Matrix; Rotations : Axis_Vector) return Shape_Access is
+      T_Shape : Shape_Access := new Shape(5,5,5);
+   begin
+      -- Do proper rotation, Axis_Vector contains what rotations that needs to be made, 
+      -- and with how many steps.
+      return T_Shape;
+   end Rotate;
+   
+   
 end Shape;

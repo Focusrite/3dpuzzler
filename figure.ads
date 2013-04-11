@@ -13,7 +13,9 @@ with Shape;    use Shape;
 with Geometry; use Geometry;
 
 package Figure is
-   type Figure_Type(Xt, Yt, Zt : Integer) is private; --(<>)
+   type Figure_Type is private; --(<>)
+   type Rotation_Type is private;
+   type Rotations_Array is array (Integer range 1..24) of Rotation_Type;
    type Figure_Access is access all Figure_Type;
    
    procedure Translate(Figure : in out Figure_Type; DX, DY, DZ : in Integer);
@@ -44,15 +46,24 @@ package Figure is
    function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer;
    
    function Get_Id(Figure: Figure_Access) return Integer;
+   
+   procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix);
 private
-   type Figure_Type(Xt, Yt, Zt : Integer) is
+   type Figure_Type is
       record
 	 Pos : Axis_Vector := (0, 0, 0);
-	 Shape : Shape_Matrix(1..Xt, 1..Yt, 1..Zt);
+	 Shape : Shape_Access; --Current
+	 Rotation_List : Rotations_Array;
 	 Steps : Axis_Vector := (0, 0, 0);
-         Rotations: Axis_Vector := (0, 0, 0);
+         Rotation_Id: Integer := 1;
          Id : Integer := 0;
 	 -- fill
       end record;
+   
+   type Rotation_Type is
+      record
+	 Shape : Shape_Access;
+	 Rotation : Axis_Vector := (0, 0, 0);
+      end record;	 
 
 end Figure;

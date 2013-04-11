@@ -6,29 +6,24 @@ package body Runtime is
       Part_List: aliased Figure_List_Type;
       Socket : Socket_Type;
       Puzzle_Figure: Figure_Access;
-      Correct : Boolean;
+      Is_Done: Boolean;
+      Correct: Boolean;
    begin
       Socket := Init(Str.To_Unbounded_String("BestTeamEver"));
       Part_List := Receive_Parts(Socket);
       loop
        	 begin
-	    Puzzle_Figure := Receive_Figure(Socket);
+	    Listen_Next(Socket, Puzzle_Figure, Is_Done);
+	    exit when Is_Done;	    
 	    Solve(Part_List, Puzzle_Figure); -- DUMMY
 	    Send_Solution(Socket, Part_List, Puzzle_Figure);
 	    Correct := Receive_Answer(Socket);
-	    if Correct then
-	      Put("Rätt!");
-	    else
-	       Put("Fel!");
-	    end if;
-	    
-	 --exception
-	 --   when others =>
-	 --      return;
-	    --om terminate, avsluta
 	 end;
-	 --exit when fått nånting done
       end loop;
+      loop
+	 Listen_End(Socket);
+      end loop;
+      --börja leta efter de sista meddelandena
    end Run;
    
    
