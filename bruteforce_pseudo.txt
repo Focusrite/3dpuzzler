@@ -29,5 +29,8 @@ Kolla om biten passar in i figuren
     "Deaktivera" biten
     Börja om från början
 -Om Nej:
-    Flytta biten ett steg i X-led
+	Om roteringar kvar:
+		Rotera.
+	Om Inga roteringar kvar:
+    		Flytta biten ett steg i X-led
     Börja om från [loop 1]
