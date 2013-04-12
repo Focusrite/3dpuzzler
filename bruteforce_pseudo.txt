@@ -1,0 +1,33 @@
+
+
+Ta första aktiva biten
+Lägg första biten i origo
+[loop 1]
+Kolla om biten är innanför figurens Z-område
+-Om Ja:
+    fortsätt
+-Om Nej:
+    Börja om från tidigare sparat state
+Kolla om biten är innanför figurens Y-område
+-Om Ja:
+    fortsätt
+-Om Nej:
+    Sätt X = 0
+    Sätt Y = 0
+    Sätt Z++
+Kolla om biten är innanför figurens X-"område"
+-Om Ja: 
+    fortsätt
+-Om Nej: 
+    Sätt X = 0
+    Sätt Y++
+Kolla om biten passar in i figuren
+-Om Ja:
+    save state
+    figur - bit
+    Spara koordinater och rotation för biten
+    "Deaktivera" biten
+    Börja om från början
+-Om Nej:
+    Flytta biten ett steg i X-led
+    Börja om från [loop 1]
