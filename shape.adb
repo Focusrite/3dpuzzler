@@ -180,6 +180,8 @@ package body Shape is
 	 for Y in New_Shape'Range(2) loop
 	    for X in New_Shape'Range(1) loop
 	       if (X - Offset(AXIS_X)) in New_Shape'Range(1) and (Y - Offset(AXIS_Y)) in New_Shape'Range(2) and (Z - Offset(AXIS_Z)) in New_Shape'Range(3) then
+		  Put("X: "); Put(X); Put(", Y: "); Put(Y); Put(" , Z: "); Put(Z);New_Line;
+		  Put("oX: "); Put(Offset(AXIS_X)); Put(", oY: "); Put(Offset(AXIS_Y)); Put(" , oZ: "); Put(Offset(AXIS_Z));New_Line;
 		  New_Shape(X, Y, Z) := Shape(X-Offset(AXIS_X), Y-Offset(AXIS_Y), Z-Offset(AXIS_Z));
 	       else
 		  New_Shape(X, Y, Z) := False;

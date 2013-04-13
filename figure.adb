@@ -156,7 +156,7 @@ package body Figure is
    end Shape_To_Figure;
    
 
-   function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer is  
+   function Get_Rotation(R_Figure: in Figure_Access; Axis: in Axis_Enum) return Integer is  
    begin
       return R_Figure.Rotation_List(R_Figure.Rotation_Id).Rotation(Axis);
    end Get_Rotation;
@@ -169,8 +169,11 @@ package body Figure is
    procedure Set_Rotation(Figure: in out Figure_Access; Rotation : in Integer) is
    begin
       Figure.Rotation_Id := Rotation;
-      Figure.Shape := Rotation_List(Rotation);
+      Figure.Shape := Figure.Rotation_List(Rotation).Shape;
    end Set_Rotation;
+   
+
+   
    
    function Get_Id(Figure: in Figure_Access) return Integer is
    begin
@@ -195,21 +198,21 @@ package body Figure is
    
    function Get_Width(Figure : Figure_Access) return Integer is
    begin
-      return Figure.Shape(1)'Last;
+      return Figure.Shape'Length(1);
    end Get_Width;
    
    function Get_Height(Figure : Figure_Access) return Integer is
    begin
-      return Figure.Shape(2)'Last;
+      return Figure.Shape'Length(2);
    end Get_Height;
    
    function Get_Depth(Figure : Figure_Access) return Integer is
    begin
-      return Figure.Shape(3)'Last;
+      return Figure.Shape'Length(3);
    end Get_Depth;
    
    
-   procedure Set_Position(Figure : in out Figure_Access, X, Y, Z : in Integer) is
+   procedure Set_Position(Figure : in out Figure_Access; X, Y, Z : in Integer) is
    begin
       Figure.Pos(AXIS_X) := X;
       Figure.Pos(AXIS_Y) := Y;

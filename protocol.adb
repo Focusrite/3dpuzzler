@@ -78,12 +78,12 @@ package body Protocol is
       First(Solved_Figure_List, Current_Part);
       loop --'image sätter mellanslag innan varje
 	 Resultstr := Resultstr & " !"
-	   & Integer'Image(Get_Rotation(Current_Part.all, AXIS_X)) -- kanske måste referera till .all
-	   & Integer'Image(Get_Rotation(Current_Part.all, AXIS_Y))
-	   & Integer'Image(Get_Rotation(Current_Part.all, AXIS_Z))
-	   & Integer'Image(Get_Rotation(Current_Part.all, AXIS_X))
-	   & Integer'Image(Get_Rotation(Current_Part.all, AXIS_Y))
-	   & Integer'Image(Get_Rotation(Current_Part.all, AXIS_Z));
+	   & Integer'Image(Get_Rotation(Current_Part, AXIS_X))
+	   & Integer'Image(Get_Rotation(Current_Part, AXIS_Y))
+	   & Integer'Image(Get_Rotation(Current_Part, AXIS_Z))
+	   & Integer'Image(Get_X(Current_Part))
+	   & Integer'Image(Get_Y(Current_Part))
+	   & Integer'Image(Get_Z(Current_Part));
 	 
 	 exit when Last_Element(Solved_Figure_List) = Current_Part.all;
 	 Next(Solved_Figure_List, Current_Part);

@@ -3,7 +3,7 @@ with Figure_List; use Figure_List;
 
 package Algorithm is
    
-   procedure Solve(Parts : in out Figure_List_Type; Figure : in Figure_Access);
+   procedure Solve(Part_List : in out Figure_List_Type; Figure : in Figure_Access);
    
    
 end Algorithm;
