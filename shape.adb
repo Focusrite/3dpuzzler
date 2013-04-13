@@ -237,12 +237,27 @@ package body Shape is
    
    --|----------------------------------------------------------------------------------
    function Rotate(Shape : Shape_Matrix; Rotations : Axis_Vector) return Shape_Access is
-      T_Shape : Shape_Access := new Shape(5,5,5);
+      function Rotater(Shaped : Shape_Matrix; Rot : Axis_Vector) return Shape_Matrix is
+	 V : Axis_Vector := Rot;
+      begin
+	 if V(AXIS_X) > 0 then
+	    V(AXIS_X) := V(AXIS_X) - 1;
+	    return Rotater(Shaped, V);
+	 end if;
+	 if V(AXIS_Y) > 0 then
+	    V(AXIS_Y) := V(AXIS_Y) - 1;
+	    return Rotater(Shaped, V);
+	 end if;
+	 if V(AXIS_Z) > 0 then
+	    V(AXIS_Z) := V(AXIS_Z) - 1;
+	    return Rotater(Shaped, V);
+	 end if;
+	 return Shaped;
+      end Rotater;  
+      
+      T_Shape : aliased Shape_Matrix := Rotater(Shape, Rotations);
+      Ptr : Shape_Access := T_Shape'Unchecked_Access;
    begin
-      -- Do proper rotation, Axis_Vector contains what rotations that needs to be made, 
-      -- and with how many steps.
-      return T_Shape;
-   end Rotate;
-   
-   
+      return Ptr;
+   end Rotate;   
 end Shape;

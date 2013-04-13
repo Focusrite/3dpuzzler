@@ -48,6 +48,8 @@ package Figure is
    function Get_Id(Figure: Figure_Access) return Integer;
    
    procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix);
+   
+   function New_Rotation(Shape : Shape_Access; Vector : Axis_Vector) return Rotation_Type;
 private
    type Figure_Type is
       record

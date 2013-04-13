@@ -15,11 +15,12 @@
 --|----------------------------------------------------------------------------------------
 
 with Geometry; use Geometry;
-
+with Ada.Unchecked_Deallocation;
 
 package Shape is
    type Shape_Matrix is array(Integer range <>, Integer range <>, Integer range <>) of Boolean;
-   type Shape_Access is access Shape_Matrix;
+   type Shape_Access is access all Shape_Matrix;
+   procedure Free_Vector is new Ada.Unchecked_Deallocation(Object => Shape_Matrix, Name => Shape_Access);
 
    function "=" (Left, Right : Shape_Matrix) return Boolean;
    function "-" (Left, Right : Shape_Matrix) return Shape_Matrix;

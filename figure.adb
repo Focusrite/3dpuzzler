@@ -170,6 +170,7 @@ package body Figure is
    procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix) is
       -- T_Shape : aliased Shape_Matrix;
       X, Y, Z : Integer := 0;
+      Vector : Axis_Vector;
    begin
       for I in Integer range Figure.Rotation_List'Range loop
 	 X := X + 1;
@@ -181,11 +182,17 @@ package body Figure is
 	       Z := Z + 1;
 	    end if;
 	 end if;
-	 Figure.Rotation_List(I).Rotation := (X, Y, Z);
+	 Vector := (X, Y, Z);
 	 -- T_Shape := Rotate(Shape, Figure.Rotation_List(I).Rotation);
-	 Figure.Rotation_List(I).Shape := Rotate(Shape, Figure.Rotation_List(I).Rotation); 
+	 Figure.Rotation_List(I) := New_Rotation(Rotate(Shape, Vector), Vector); 
 	 -- Might have to change to return a pointer instead 
       end loop;
    end Preload_Rotations;
+   
+   function New_Rotation(Shape : Shape_Access; Vector : Axis_Vector) return Rotation_Type is
+      Rotation : Rotation_Type := (Shape, Vector);
+   begin
+      return Rotation;
+   end New_Rotation;
    
 end Figure;
