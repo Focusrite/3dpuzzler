@@ -29,6 +29,7 @@ package Figure_List is
    function  Member(List : in Figure_List_Type; Figure : Figure_Type) return Boolean;
    function Last_Element(List : in Figure_List_Type) return Figure_Type;
    procedure Next(List: in out Figure_List_Type; N_Figure: out Figure_Access);
+   procedure Previous(List : in out Figure_List_Type; N_Figure : out Figure_Access);
    
 private
    

@@ -161,10 +161,60 @@ package body Figure is
       return R_Figure.Rotation_List(R_Figure.Rotation_Id).Rotation(Axis);
    end Get_Rotation;
    
+   function Get_Rotation(R_Figure: in Figure_Access) return Integer is
+   begin
+      return R_Figure.Rotation_Id;
+   end Get_Rotation;
+   
+   procedure Set_Rotation(Figure: in out Figure_Access; Rotation : in Integer) is
+   begin
+      Figure.Rotation_Id := Rotation;
+      Figure.Shape := Rotation_List(Rotation);
+   end Set_Rotation;
+   
    function Get_Id(Figure: in Figure_Access) return Integer is
    begin
       return Figure.Id;
    end Get_Id;
+   
+   
+   function Get_X(Figure : Figure_Access) return Integer is
+   begin
+      return Figure.Pos(AXIS_X);
+   end Get_X;
+   
+   function Get_Y(Figure : Figure_Access) return Integer is
+   begin
+      return Figure.Pos(AXIS_Y);
+   end Get_Y;
+   
+   function Get_Z(Figure : Figure_Access) return Integer is
+   begin
+      return Figure.Pos(AXIS_Z);
+   end Get_Z;
+   
+   function Get_Width(Figure : Figure_Access) return Integer is
+   begin
+      return Figure.Shape(1)'Last;
+   end Get_Width;
+   
+   function Get_Height(Figure : Figure_Access) return Integer is
+   begin
+      return Figure.Shape(2)'Last;
+   end Get_Height;
+   
+   function Get_Depth(Figure : Figure_Access) return Integer is
+   begin
+      return Figure.Shape(3)'Last;
+   end Get_Depth;
+   
+   
+   procedure Set_Position(Figure : in out Figure_Access, X, Y, Z : in Integer) is
+   begin
+      Figure.Pos(AXIS_X) := X;
+      Figure.Pos(AXIS_Y) := Y;
+      Figure.Pos(AXIS_Z) := Z;
+   end Set_Position;
    
    --|---------------------------------------------------------------------------
    procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix) is

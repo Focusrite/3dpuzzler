@@ -43,9 +43,17 @@ package Figure is
 
    function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Access;
    
-   function Get_Rotation(R_Figure: Figure_Type; Axis: Axis_Enum) return Integer;
+   function Get_Rotation(R_Figure: in Figure_Access) return Integer;
+   procedure Set_Rotation(Figure: in out Figure_Access; Rotation : in Integer);
    
    function Get_Id(Figure: Figure_Access) return Integer;
+   function Get_X(Figure : Figure_Access) return Integer;
+   function Get_Y(Figure : Figure_Access) return Integer;
+   function Get_Z(Figure : Figure_Access) return Integer;
+   
+   function Get_Width(Figure : Figure_Access) return Integer;
+   function Get_Height(Figure : Figure_Access) return Integer;
+   function Get_Depth(Figure : Figure_Access) return Integer;
    
    procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix);
    

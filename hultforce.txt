@@ -1,0 +1,10 @@
+
+
+Bruteforca BARA första lagret (Z = 1)
+När vi har en match, Kolla Contains på figure och bitarna som matchats
+True? Ta bort bitarna från figuren
+False? Kör om tills en annan matchning
+
+Efter en lyckad matchning och borttagning, gör samma sak för nästa lager som har "del-bitar" kvar (typ Z = 3)
+
+Fortsätt tills vi har löst den eller testat allt på ett lager utan resultat, då hoppar vi tillbaka ett steg och fortsätter med andra lösningar på det lagret. 
