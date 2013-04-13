@@ -33,11 +33,17 @@ package body Figure_List is
       F_Figure := Figures.Element(List.C);
    end;
    
-   procedure Next(List: in out Figure_List_Type; N_Figure: out Figure_Access) is
+    procedure Next(List: in out Figure_List_Type; N_Figure: out Figure_Access) is
    begin
       List.C := Figures.Next(List.C);
       N_Figure := Figures.Element(List.C);
    end Next;
+   
+   procedure Previous(List: in out Figure_List_Type; N_Figure: out Figure_Access) is
+   begin
+      List.C := Figures.Previous(List.C);
+      N_Figure := Figures.Element(List.C);
+   end Previous;
    
    function Last_Element(List: Figure_List_Type) return Figure_Type is
    begin

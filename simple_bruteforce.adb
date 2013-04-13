@@ -7,36 +7,37 @@ procedure Simple_Bruteforce(Part_List : in out Figure_List_Type; Figure : in Fig
 begin
 	First(Part_List, Current_Part);
 	while Volume(Figure) > 0 loop
-		if Current_Part.Z + Current_Part.Shape(3)'Last > Goal.Shape(3)'Last then
+		if Get_Z(Current_Part) + Get_Depth(Current_Part) > Get_Depth(Goal) then
 			if Get_Id(Current_Part) = 1 then
 				Put("FAKKING GÅR INTE");
-				break;
+				exit;
 			else 
-				Previous(List, Current_Part); -- BEHÖVER IMPLEMENTERA DENNA FUNKTION
+			   Set_Position(Current_Part, 0, 0, 0);
+			   Set_Rotation(Current_Part, 1);
+				Previous(Part_List, Current_Part); -- BEHÖVER IMPLEMENTERA DENNA FUNKTION
 				Goal := Union(Goal, Current_Part);
 			end if;
 		else
-			if Current_Part.Y + Current_Part.Shape(2)'Last > Goal.Shape(2)'Last then
-				Current_Part.X := 0;
-				Current_Part.Y := 0;
-				Current_Part.Z := Current_Part.Z + 1;
+			if Get_Y(Current_Part) + Get_Height(Current_Part) > Get_Height(Goal) then
+			   Set_Position(Current_Part, 0, 0, Get_Z(Current_Part) + 1);
 			else
-				if Current_Part.X + Current_Part.Shape(1)'Last > Goal.Shape(1)'Last then
-					Current_Part.X := 0;
-					Current_Part.Y := Current_Part.Y + 1;
+				if Get_X(Current_Part) + Get_Width(Current_Part) > Get_Width(Goal) then
+					Set_Position(Current_Part, 0, Get_Y(Current_Part) + 1, Get_Z(Current_Part))
 				else
 					if Fits(Current_Part, Goal) then
 						Goal := Difference(Goal, Current_Part);
 						Next(Figure_List_Type, Current_Part);
-						-- BEHÖVER KOLLA OM VI GÅTT RUNT HELA LISTA, VI FÅR -INTE- KOMMA TILLBAKA TILL ELEMENT 1
+						if  Current_Part = null then
+						   Put("Slut på delar");
+						   exit;
+						end if;
+						
 					else
 						if Get_Rotation(Current_Part) >= 24 then
-							Current_Part.Shape := Current_Part.Rotations_Array(1);
-							Current_Part.Rotation_Id := 1;
-							Current_Part.X := Current_Part.X + 1;
+							Set_Rotation(Current_Part, 1);
+							Set_Position(Current_Part, Get_X(Current_Part) + 1, Get_Y(Current_Part), Get_Z(Current_Part));
 						else
-							Current_Part.Shape := Current_Part.Rotations_Array(Get_Rotation(Current_Part) + 1);
-							Current_Part.Rotation_Id := Get_Rotation(Current_Part) + 1;
+							Set_Rotation(Current_Part, Get_Rotation(Current_Part) + 1);
 						end if;
 					end if;
 				end if;
