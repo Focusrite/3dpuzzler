@@ -1,9 +1,24 @@
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 
 package body Figure_List is
    procedure Append(List : in out Figure_List_Type; Figure : Figure_Access) is
    begin
       Figures.Append(List.L, Figure);
+      --Put("I append: ----------------");
+      --Put("Size:");
+      --New_Line;
+      --Put("Width: ");
+      --Put(Get_Width(Figure), 0);
+      --New_Line;
+      --Put("Height: ");
+      --Put(Get_Height(Figure), 0);
+      --New_Line;
+      --Put("Depth: ");
+      --Put(Get_Depth(Figure), 0);
+      New_Line;      
+
    end Append;
    
    procedure Remove(List : in out Figure_List_Type; Figure : Figure_Access) is
@@ -27,13 +42,13 @@ package body Figure_List is
       Figures.Clear(List.L);
    end Clear;
      
-   procedure First(List: in out FIgure_List_Type; F_Figure: out Figure_Access) is
+   procedure First(List: in out Figure_List_Type; F_Figure: out Figure_Access) is
    begin
       List.C := Figures.First(List.L);
       F_Figure := Figures.Element(List.C);
    end;
    
-    procedure Next(List: in out Figure_List_Type; N_Figure: out Figure_Access) is
+   procedure Next(List: in out Figure_List_Type; N_Figure: out Figure_Access) is
    begin
       List.C := Figures.Next(List.C);
       N_Figure := Figures.Element(List.C);
@@ -50,7 +65,24 @@ package body Figure_List is
       return Figures.Last_Element(List.L).all;
    end Last_Element;
    
-     
+ --  procedure Iter_Put(List : in out Figure_List_Type) is
+ --     procedure Put(Item : Figure_Access) is
+ --     begin
+--	 Put("Size:");
+--	 New_Line;
+--	 Put("Width: ");
+--	 Put(Get_Width(Figure), 0);
+--	 New_Line;
+--	 Put("Height: ");
+--	 Put(Get_Height(Figure), 0);
+--	 New_Line;
+--	 Put("Depth: ");
+--	 Put(Get_Depth(Figure), 0);
+--	 New_Line;
+--      end Put;
+--   begin
+--      Iterate(List.L, Put(List.C));
+--   end Iter_Put;
      
 end Figure_List;
 

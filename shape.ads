@@ -37,7 +37,7 @@ package Shape is
    function Corner(Shape : Shape_Matrix) return Boolean;
    function Center(Shape : Shape_Matrix) return Axis_Vector;
 
-   function Standardize(Shape : Shape_Matrix; Size, Offset : Axis_Vector) return Shape_Matrix;
+   function Standardize(Shape : Shape_Matrix; I_Size, Offset : Axis_Vector) return Shape_Matrix;
    function Subshape(Shape : Shape_Matrix; Size, Offset : Axis_Vector) return Shape_Matrix;
    function Volume(Shape : Shape_Matrix) return Integer;
    function Size(Shape : Shape_Matrix; Axis : Axis_Enum) return Integer;

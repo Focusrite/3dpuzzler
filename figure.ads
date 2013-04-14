@@ -25,9 +25,9 @@ package Figure is
    function Center(Figure : in Figure_Type) return Axis_Vector;
    function "=" (Left, Right : Figure_Type) return Boolean;
 
-   function Difference(Source, Subtractor : Figure_Type) return Figure_Access;
+   procedure Difference(Source: in out Figure_Type; Subtractor : Figure_Type);
 
-   function Union(Figure1, Figure2 : Figure_Type) return Figure_Access;
+   procedure Union(Figure1: in out Figure_Type; Figure2 : Figure_Type);
 
    --function Contains(Figure1, Figure2 : Figure_Type) return Boolean;
 

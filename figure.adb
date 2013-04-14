@@ -43,21 +43,22 @@ package body Figure is
    end "=";
 
    --|--------------------------------------------------------------------------
-   function Difference(Source, Subtractor : Figure_Type) return Figure_Access is
+   procedure Difference(Source: in out Figure_Type; Subtractor : Figure_Type) is
       T_Shape1 : Shape_Matrix := Shapeify(Source, Subtractor);
       T_Shape2 : Shape_Matrix := Shapeify(Subtractor, Source);
+      V : Axis_Vector := (0, 0, 0);
    begin
-
-      return Shape_To_Figure(T_Shape1 - T_Shape2);
+      Source.Shape := Rotate(T_Shape1 - T_Shape2, V);
    end Difference;
 
    --|--------------------------------------------------------------------------
-   function Union(Figure1, Figure2 : Figure_Type) return Figure_Access is
+   procedure Union(Figure1: in out Figure_Type; Figure2 : Figure_Type) is
       T_Shape1 : Shape_Matrix := Shapeify(Figure1, Figure2);
       T_Shape2 : Shape_Matrix := Shapeify(Figure2, Figure1);
+      V : Axis_Vector := (0, 0, 0);
    begin
 
-      return Shape_To_Figure(T_Shape1 + T_Shape2);
+      Figure1.Shape := Rotate(T_Shape1 + T_Shape2, V);
    end Union;
    
 
@@ -106,14 +107,28 @@ package body Figure is
       Size_Vector(AXIS_X) := Max_X;
       Size_Vector(AXIS_Y) := Max_Y;
       Size_Vector(AXIS_Z) := Max_Z;
-      Put("Id: ");
-      Put(Source.Id, 0);
-      Put("Last: ");
-      New_Line;
+--      Put("Id: ");
+--      Put(Source.Id, 0);
+--      New_Line;
+--      Put("Last: ");
+--      Put(Source.Shape'Last(1), 0);
+--      Put(" ");
+--      Put(Source.Shape'Last(2), 0);
+--      Put(" ");
+--      Put(Source.Shape'Last(3), 0);
+--      New_Line;
+--      Put("First: ");
+--      Put(Source.Shape'First(1), 0);
+--      Put(" ");
+--      Put(Source.Shape'First(2), 0);
+--      Put(" ");
+--      Put(Source.Shape'First(3), 0);      
+--      New_Line;
       return Standardize(Source.Shape.all, Size_Vector, Source.Pos);
    end Shapeify;
 
-   function New_Figure(Shape : in Shape_Matrix; Id : in Integer := 0) return Figure_Access is
+   function New_Figure(Shape : in Shape_Matrix; 
+		       Id : in Integer := 0) return Figure_Access is
       T_Figure : Figure_Access := new Figure_Type;
    begin
       T_Figure.id := Id;
@@ -153,9 +168,9 @@ package body Figure is
          end loop;
       end loop;
 
-      Size(AXIS_X) := Size(AXIS_X) - Offset(AXIS_X);
-      Size(AXIS_Y) := Size(AXIS_Y) - Offset(AXIS_Y);
-      Size(AXIS_Z) := Size(AXIS_Z) - Offset(AXIS_Z);
+      Size(AXIS_X) := Size(AXIS_X) - Offset(AXIS_X) + 1;
+      Size(AXIS_Y) := Size(AXIS_Y) - Offset(AXIS_Y) + 1;
+      Size(AXIS_Z) := Size(AXIS_Z) - Offset(AXIS_Z) + 1;
 
       return New_Figure(Subshape(Shape, Size, Offset));
    end Shape_To_Figure;
@@ -180,8 +195,7 @@ package body Figure is
    function Get_Id(Figure: in Figure_Access) return Integer is
    begin
       return Figure.Id;
-   end Get_Id;
-   
+   end Get_Id;   
    
    function Get_X(Figure : Figure_Access) return Integer is
    begin
@@ -224,10 +238,18 @@ package body Figure is
    --|---------------------------------------------------------------------------
    procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix) is
       -- T_Shape : aliased Shape_Matrix;
-      X, Y, Z : Integer := 0;
+      X : Integer := 0;
+      Y : Integer := 0;
+      Z : Integer := 0;
       Vector : Axis_Vector;
+      Rotate_Temp : Shape_Access;
    begin
       for I in Integer range Figure.Rotation_List'Range loop
+	 Vector := (X, Y, Z);
+	 -- T_Shape := Rotate(Shape, Figure.Rotation_List(I).Rotation);
+	 Rotate_Temp := Rotate(Shape, Vector);
+	 Figure.Rotation_List(I) := New_Rotation(Rotate_Temp, Vector); 
+	 --Might have to change to return a pointer instead 
 	 X := X + 1;
 	 if X = 4 then
 	    X := 0;
@@ -237,16 +259,28 @@ package body Figure is
 	       Z := Z + 1;
 	    end if;
 	 end if;
-	 Vector := (X, Y, Z);
-	 -- T_Shape := Rotate(Shape, Figure.Rotation_List(I).Rotation);
-	 Figure.Rotation_List(I) := New_Rotation(Rotate(Shape, Vector), Vector); 
-	 -- Might have to change to return a pointer instead 
       end loop;
    end Preload_Rotations;
    
    function New_Rotation(Shape : Shape_Access; Vector : Axis_Vector) return Rotation_Type is
       Rotation : Rotation_Type := (Shape, Vector);
    begin
+      --Put("I NEW_ROTATION: --------------------");
+      --New_Line;
+      --Put("Last: ");
+      --Put(Shape'Last(1), 0);
+      --Put(" ");
+      --Put(Shape'Last(2), 0);
+      --Put(" ");
+      --Put(Shape'Last(3), 0);
+      --New_Line;
+      --Put("First: ");
+      --Put(Shape'First(1), 0);
+      --Put(" ");
+      --Put(Shape'First(2), 0);
+      --Put(" ");
+      --Put(Shape'First(3), 0);      
+      --New_Line;      
       return Rotation;
    end New_Rotation;
    

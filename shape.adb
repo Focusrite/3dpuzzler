@@ -39,17 +39,33 @@ package body Shape is
    
    function "+" (Left, Right : Shape_Matrix)
 		return Shape_Matrix is
-      function Union_Brain(X, Y, Z : Integer)
+      function Union_Brain(Left, Right : Shape_Matrix; X, Y, Z : Integer)
 			  return Shape_Matrix is
-
+	 Temp : Shape_Matrix(1..X, 1..Y, 1..Z);
       begin
-	 return Left; -- TODO
+	 for Xi in Temp'Range(1) loop
+	    for Yi in Temp'Range(2) loop
+	       for Zi in Temp'Range(3) loop
+		  if Xi in Left'Range(1) and Yi in Left'Range(2) and Zi in Left'Range(3) then
+		     Temp(Xi, Yi, Zi) := Left(Xi, Yi, Zi);
+		  else
+		     Temp(Xi, Yi, Zi) := False;
+		  end if;
+		  if Xi in Right'Range(1) and Yi in Right'Range(2) and Zi in Right'Range(3) then
+		     Temp(Xi, Yi, Zi) := Temp(Xi, Yi, Zi) or Right(Xi, Yi, Zi);
+		  else
+		     Temp(Xi, Yi, Zi) := Temp(Xi, Yi, Zi) or False;
+		  end if;
+	       end loop;
+	    end loop;
+	 end loop;
+	 return Temp;
       end Union_Brain;
    begin
-      return Union_Brain(Integer'Max(Left'Last(1), Right'Last(1)), Integer'Max(Left'Last(2), Right'Last(2)), Integer'Max(Left'Last(3), Right'Last(3)));
-
-      
-      
+      return Union_Brain(Left, Right,
+			 Integer'Max(Left'Last(1), Right'Last(1)), 
+			 Integer'Max(Left'Last(2), Right'Last(2)), 
+			 Integer'Max(Left'Last(3), Right'Last(3)));
    end "+";
    
    function Rotate(Shape : Shape_Matrix; Axis : Axis_Enum; Steps : Integer := 1)
@@ -175,22 +191,22 @@ package body Shape is
       return Ret_Vector;
    end Center;
    
-   function Standardize(Shape : Shape_Matrix; Size, Offset : Axis_Vector)
+   function Standardize(Shape : Shape_Matrix; I_Size, Offset : Axis_Vector)
 		       return Shape_Matrix is
-      New_Shape : Shape_Matrix(1..Size(AXIS_X), 1..Size(AXIS_Y), 1..Size(AXIS_Z));
+      New_Shape : Shape_Matrix(1..Integer'Max(I_Size(AXIS_X), Size(Shape, AXIS_X)), 
+			       1..Integer'Max(I_Size(AXIS_Y), Size(Shape, AXIS_Y)), 
+			       1..Integer'Max(I_Size(AXIS_Z), Size(Shape, AXIS_Z)));
    begin
       --Put("STANDARDIZE----------------------------------------------------------------------");
       for Z in New_Shape'Range(3) loop
 	 for Y in New_Shape'Range(2) loop
 	    for X in New_Shape'Range(1) loop
 	       if (X - Offset(AXIS_X)) in New_Shape'Range(1) and (Y - Offset(AXIS_Y)) in New_Shape'Range(2) and (Z - Offset(AXIS_Z)) in New_Shape'Range(3) then
-		  --New_Line;
-		  --New_Line;
-		  --Put("sX: "); Put(Shape'Last(1), 0); Put(" ,sY: "); Put(Shape'Last(2), 0); Put(" , sZ: "); Put(Shape'Last(3), 0);New_Line;
-		  --Put("nX: "); Put(New_Shape'Last(1), 0); Put(" ,nY: "); Put(New_Shape'Last(2), 0); Put(" , nZ: "); Put(New_Shape'Last(3), 0);New_Line;
-		  --Put("X: "); Put(X, 0); Put(", Y: "); Put(Y, 0); Put(" , Z: "); Put(Z, 0);New_Line;
-		  --Put("oX: "); Put(Offset(AXIS_X), 0); Put(", oY: "); Put(Offset(AXIS_Y), 0); Put(" , oZ: "); Put(Offset(AXIS_Z), 0);New_Line;
-		  New_Shape(X, Y, Z) := Shape(X-Offset(AXIS_X), Y-Offset(AXIS_Y), Z-Offset(AXIS_Z));
+		  if (X - Offset(AXIS_X)) in Shape'Range(1) and (Y - Offset(AXIS_Y)) in Shape'Range(2) and (Z - Offset(AXIS_Z)) in Shape'Range(3) then
+		     New_Shape(X, Y, Z) := Shape(X-Offset(AXIS_X), Y-Offset(AXIS_Y), Z-Offset(AXIS_Z));
+		  else
+		     New_Shape(X, Y, Z) := False;
+		  end if;
 	       else
 		  New_Shape(X, Y, Z) := False;
 	       end if;
@@ -204,11 +220,12 @@ package body Shape is
 		    return Shape_Matrix is
       New_Shape : Shape_Matrix(1..Size(AXIS_X), 1..Size(AXIS_Y), 1..Size(AXIS_Z));
    begin
-      if (Size(AXIS_X) + Offset(AXIS_X)) in Shape'Range(1) and (Size(AXIS_Y) + Offset(AXIS_Y)) in Shape'Range(2) and (Size(AXIS_Z) + Offset(AXIS_Z)) in Shape'Range(3) then
-	 for Z in (Offset(AXIS_Z))..(Offset(AXIS_Z) + Size(AXIS_Z)) loop
-	    for Y in (Offset(AXIS_Y))..(Offset(AXIS_Y) + Size(AXIS_Y)) loop
-	       for X in (Offset(AXIS_X))..(Offset(AXIS_X) + Size(AXIS_X)) loop
-		  New_Shape(X - Offset(AXIS_X), Y - Offset(AXIS_Y), Z - Offset(AXIS_Z)) := Shape(X, Y, Z);
+      if (Size(AXIS_X) + Offset(AXIS_X)) in Shape'Range(1) and (Size(AXIS_Y) + Offset(AXIS_Y)) in Shape'Range(2) and (Size(AXIS_Z) + Offset(AXIS_Z)) in Shape'Range(3) then 
+	 for Z in (Offset(AXIS_Z))..(Offset(AXIS_Z) + Size(AXIS_Z) - 1) loop
+	    for Y in (Offset(AXIS_Y))..(Offset(AXIS_Y) + Size(AXIS_Y) - 1) loop
+	       for X in (Offset(AXIS_X))..(Offset(AXIS_X) + Size(AXIS_X) - 1) loop
+		  New_Shape(X - Offset(AXIS_X) +1, Y - Offset(AXIS_Y)+1 , Z - Offset(AXIS_Z)+1) := Shape(X, Y, Z);
+		--New_Shape(X, Y, Z) := Shape(X - Offset(AXIS_X) +1, Y - Offset(AXIS_Y)+1 , Z - Offset(AXIS_Z)+1);	     
 	       end loop;
 	    end loop;
 	 end loop;
@@ -250,24 +267,82 @@ package body Shape is
       function Rotater(Shaped : Shape_Matrix; Rot : Axis_Vector) return Shape_Matrix is
 	 V : Axis_Vector := Rot;
       begin
+--	 Put("I ROTATER: --------------------");
+--	 New_Line;
+--	 Put("Last: ");
+--	 Put(Shaped'Last(1), 0);
+--	 Put(" ");
+--	 Put(Shaped'Last(2), 0);
+--	 Put(" ");
+--	 Put(Shaped'Last(3), 0);
+--	 New_Line;
+--	 Put("First: ");
+--	 Put(Shaped'First(1), 0);
+--	 Put(" ");
+--	 Put(Shaped'First(2), 0);
+--	 Put(" ");
+--	 Put(Shaped'First(3), 0);
+--	 New_Line;
 	 if V(AXIS_X) > 0 then
 	    V(AXIS_X) := V(AXIS_X) - 1;
-	    return Rotater(Shaped, V);
+	    return Rotater(Rotate(Shaped, AXIS_X), V);
 	 end if;
 	 if V(AXIS_Y) > 0 then
 	    V(AXIS_Y) := V(AXIS_Y) - 1;
-	    return Rotater(Shaped, V);
+	    return Rotater(Rotate(Shaped, AXIS_Y), V);
 	 end if;
 	 if V(AXIS_Z) > 0 then
 	    V(AXIS_Z) := V(AXIS_Z) - 1;
-	    return Rotater(Shaped, V);
+	    return Rotater(Rotate(Shaped, AXIS_Z), V);
 	 end if;
 	 return Shaped;
-      end Rotater;  
+      end Rotater;
       
+      function Rot_Dim(Moddi : in Axis_Vector; Rots : in Axis_Vector) return Axis_Vector is
+	 Temp : Axis_Vector := Moddi;
+      begin
+	 if Rots(AXIS_X) mod 2 = 1 then
+	    Temp := (Temp(AXIS_X), Temp(AXIS_Z), Temp(AXIS_Y));
+	 end if;
+	 if Rots(AXIS_Y) mod 2 = 1 then
+	    Temp := (Temp(AXIS_Z), Temp(AXIS_Y), Temp(AXIS_X));
+	 end if;
+	 if Rots(AXIS_Z) mod 2 = 1 then
+	    Temp := (Temp(AXIS_Y), Temp(AXIS_X), Temp(AXIS_Z));
+	 end if;
+	 return Temp;
+      end Rot_Dim;
+        
       T_Shape : aliased Shape_Matrix := Rotater(Shape, Rotations);
-      Ptr : Shape_Access := T_Shape'Unchecked_Access;
+      T_Size : Axis_Vector := (Size(Shape, AXIS_X), Size(Shape, AXIS_Y), Size(Shape, AXIS_Z));
+      T_V : Axis_Vector := Rot_Dim(T_Size, Rotations);
+      Ptr : Shape_Access := new Shape_Matrix(1..T_V(AXIS_X), 1..T_V(AXIS_Y), 1..T_V(AXIS_Z));
    begin
+      --Put("Vad du vill, rotationer: ");New_Line;
+       --Put(Size(Shape, AXIS_X), 0); Put(", ");Put(Size(Shape, AXIS_Y),0); Put(", ");Put(Size(Shape, AXIS_Z),0);New_Line;
+      --Put(Rotations(AXIS_X),0); Put(", ");Put(Rotations(AXIS_Y),0); Put(", ");Put(Rotations(AXIS_Z),0);New_Line;
+      --Put(T_Size(AXIS_X),0); Put(", ");Put(T_Size(AXIS_Y),0); Put(", ");Put(T_Size(AXIS_Z),0);New_Line;
+      --Put(T_V(AXIS_X),0); Put(", ");Put(T_V(AXIS_Y),0); Put(", ");Put(T_V(AXIS_Z),0);New_Line;
+      Ptr.all := T_Shape;
+      --Put("I ROTATER: --------------------");
+      --New_Line;
+      --Put("Last: ");
+      --Put(Ptr.all'Last(1), 0);
+      --Put(" ");
+      --Put(Ptr.all'Last(2), 0);
+      --Put(" ");
+      --Put(Ptr.all'Last(3), 0);
+      --New_Line;
+--      Put("First: ");
+--      Put(Ptr.all'First(1), 0);
+--      Put(" ");
+--      Put(Ptr.all'First(2), 0);
+--      Put(" ");
+--      Put(Ptr.all'First(3), 0);
+--      New_Line;      
       return Ptr;
    end Rotate;   
+   
+   
+   
 end Shape;

@@ -128,8 +128,7 @@ package body Protocol is
    end Figure_Header_And_Number;
    
    function Receive_Answer(Socket: in Socket_Type) return Boolean is 
-      Msg: Message_Type;
-      Fig_Num: Integer;
+      Msg: Message_Type;      Fig_Num: Integer;
       Space_Between_Index: Integer;
       Answer_String: Unbounded_String;
    begin
@@ -169,11 +168,7 @@ package body Protocol is
    procedure Listen_Next(Socket: in Socket_Type; Figure: out Figure_Access; Is_Done: out Boolean) is
       Message: Message_Type;
    begin
-      Put("Innan Get i Listen_Next");
-      New_Line;
       Message := Get_Message(Socket);
-      Put("Efter Get");
-      New_Line;
       Is_Done := FALSE;
       if Message.Header = 'F' then
 	 Figure := Receive_Figure(Message);
@@ -294,6 +289,8 @@ package body Protocol is
 						   Start_Shape_Index,
 						   Start_Shape_Index + ((Dim_X * Dim_Y * Dim_Z) - 1)));  -- ta shape-sträng ur msg
 	 --Part_Access := new Figure_Type(Dim_X, Dim_Y, Dim_Z);
+	 
+	 
 	 Append(Part_List, New_Figure(Build_Shape(Shape_String, Dim_X, Dim_Y, Dim_Z), I));
 	 if I /= Number_Of_Parts then -- om det inte är sista
 				      --flytta fram indexar
