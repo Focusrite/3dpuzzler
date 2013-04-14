@@ -1,3 +1,6 @@
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+
 --TODO: ROTERA FLERA GGR IRAD!!!
 package body Shape is
    function "=" (Left, Right : Shape_Matrix)
@@ -176,12 +179,17 @@ package body Shape is
 		       return Shape_Matrix is
       New_Shape : Shape_Matrix(1..Size(AXIS_X), 1..Size(AXIS_Y), 1..Size(AXIS_Z));
    begin
+      --Put("STANDARDIZE----------------------------------------------------------------------");
       for Z in New_Shape'Range(3) loop
 	 for Y in New_Shape'Range(2) loop
 	    for X in New_Shape'Range(1) loop
 	       if (X - Offset(AXIS_X)) in New_Shape'Range(1) and (Y - Offset(AXIS_Y)) in New_Shape'Range(2) and (Z - Offset(AXIS_Z)) in New_Shape'Range(3) then
-		  Put("X: "); Put(X); Put(", Y: "); Put(Y); Put(" , Z: "); Put(Z);New_Line;
-		  Put("oX: "); Put(Offset(AXIS_X)); Put(", oY: "); Put(Offset(AXIS_Y)); Put(" , oZ: "); Put(Offset(AXIS_Z));New_Line;
+		  --New_Line;
+		  --New_Line;
+		  --Put("sX: "); Put(Shape'Last(1), 0); Put(" ,sY: "); Put(Shape'Last(2), 0); Put(" , sZ: "); Put(Shape'Last(3), 0);New_Line;
+		  --Put("nX: "); Put(New_Shape'Last(1), 0); Put(" ,nY: "); Put(New_Shape'Last(2), 0); Put(" , nZ: "); Put(New_Shape'Last(3), 0);New_Line;
+		  --Put("X: "); Put(X, 0); Put(", Y: "); Put(Y, 0); Put(" , Z: "); Put(Z, 0);New_Line;
+		  --Put("oX: "); Put(Offset(AXIS_X), 0); Put(", oY: "); Put(Offset(AXIS_Y), 0); Put(" , oZ: "); Put(Offset(AXIS_Z), 0);New_Line;
 		  New_Shape(X, Y, Z) := Shape(X-Offset(AXIS_X), Y-Offset(AXIS_Y), Z-Offset(AXIS_Z));
 	       else
 		  New_Shape(X, Y, Z) := False;

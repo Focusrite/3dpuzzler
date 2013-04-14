@@ -1,4 +1,5 @@
-
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Figure is
    --|--------------------------------------------------------------------------
@@ -58,6 +59,7 @@ package body Figure is
 
       return Shape_To_Figure(T_Shape1 + T_Shape2);
    end Union;
+   
 
    --|--------------------------------------------------------------------------
    --function Contains(Figure1, Figure2 : Figure_Type) return Boolean is
@@ -104,7 +106,10 @@ package body Figure is
       Size_Vector(AXIS_X) := Max_X;
       Size_Vector(AXIS_Y) := Max_Y;
       Size_Vector(AXIS_Z) := Max_Z;
-
+      Put("Id: ");
+      Put(Source.Id, 0);
+      Put("Last: ");
+      New_Line;
       return Standardize(Source.Shape.all, Size_Vector, Source.Pos);
    end Shapeify;
 
@@ -171,9 +176,6 @@ package body Figure is
       Figure.Rotation_Id := Rotation;
       Figure.Shape := Figure.Rotation_List(Rotation).Shape;
    end Set_Rotation;
-   
-
-   
    
    function Get_Id(Figure: in Figure_Access) return Integer is
    begin
