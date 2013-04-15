@@ -343,6 +343,22 @@ package body Shape is
       return Ptr;
    end Rotate;   
    
-   
+   procedure Put(Shape : in Shape_Matrix) is 
+   begin
+      for Z in Shape'Range(3) loop
+	 for Y in Shape'Range(2) loop
+	    for X in Shape'Range(1) loop
+	       if Shape(X, Y, Z) then
+		  Put(1, 0);
+	       else
+		  Put(0, 0);
+	       end if;
+	       Put(" ");
+	    end loop;
+	    New_Line;
+	 end loop;
+	 New_Line;
+      end loop;
+   end Put;
    
 end Shape;

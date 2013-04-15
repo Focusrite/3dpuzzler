@@ -42,6 +42,8 @@ package Shape is
    function Volume(Shape : Shape_Matrix) return Integer;
    function Size(Shape : Shape_Matrix; Axis : Axis_Enum) return Integer;
    
+   procedure Put(Shape : in Shape_Matrix);
+   
 private
    
 end Shape;

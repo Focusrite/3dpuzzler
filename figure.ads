@@ -61,6 +61,8 @@ package Figure is
    procedure Preload_Rotations(Figure : in out Figure_Type; Shape : in Shape_Matrix);
    
    function New_Rotation(Shape : Shape_Access; Vector : Axis_Vector) return Rotation_Type;
+   
+   procedure Put(Figure : in Figure_Access);
 private
    type Figure_Type is
       record

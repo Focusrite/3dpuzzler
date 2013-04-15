@@ -89,8 +89,10 @@ package body Figure is
 
    --|--------------------------------------------------------------------------
    function Fits(Figure1, Figure2 : in Figure_Type) return Boolean is
+      T_Shape1 : Shape_Matrix := Shapeify(Figure1, Figure2);
+      T_Shape2 : Shape_Matrix := Shapeify(Figure2, Figure1);
    begin
-      return Fits(Figure1.Shape.all, Figure2.Shape.all); --or Fits(Figure2.Shape, Figure1.Shape);
+      return Fits(T_Shape1, T_Shape2) or Fits(T_Shape2, T_Shape1); --or Fits(Figure2.Shape, Figure1.Shape);
    end Fits;
 
    --|--------------------------------------------------------------------------
@@ -283,5 +285,11 @@ package body Figure is
       --New_Line;      
       return Rotation;
    end New_Rotation;
+   
+   procedure Put(Figure : Figure_Access) is
+   begin
+      Put(Figure.Shape.all);
+   end Put;
+   
    
 end Figure;
