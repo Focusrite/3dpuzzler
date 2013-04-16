@@ -14,21 +14,25 @@ with Ada.Containers.Doubly_Linked_Lists;
 with Figure; use Figure;
 
 package Figure_List is
-   type Figure_Access is access all Figure_Type;
    package Figures is new Ada.Containers.Doubly_Linked_Lists(Figure_Access);
+   package Sorting is new Figures.Generic_Sorting;
    -- use Figures;
    
    --Figure_List_Type : renames Figures.List;
    type Figure_List_Type is private;
    
-   procedure Append(List : in Figure_List_Type; Figure : Figure_Type);
-   procedure Remove(List : in Figure_List_Type; Figure : Figure_Type);
-   procedure Insert(List : in Figure_List_Type; Position : Integer; Figure : Figure_Type);
-   function First(List : in out Figure_List_Type) return Figure_Access;
-   function Member(List : in Figure_List_Type; Figure : Figure_Type) return Boolean;
-   function Last_Element(List : in Figure_List_Type) return Figure_Type;
-   function Next(List: in out Figure_List_Type) return Figure_Access;
    
+   
+   procedure Append(List : in out Figure_List_Type; Figure : Figure_Access);
+   procedure Remove(List : in out Figure_List_Type; Figure : Figure_Access);
+   procedure Insert(List : in out Figure_List_Type; Position : Integer; Figure : Figure_Type);
+   procedure First(List: in out Figure_List_Type; F_Figure: out Figure_Access);
+   function  Member(List : in Figure_List_Type; Figure : Figure_Type) return Boolean;
+   function Last_Element(List : in Figure_List_Type) return Figure_Type;
+   procedure Next(List: in out Figure_List_Type; N_Figure: out Figure_Access);
+   procedure Previous(List : in out Figure_List_Type; N_Figure : out Figure_Access);
+   procedure Sort(List : in out Figure_List_Type);
+   function Length(List : in Figure_List_Type) return Integer;
 private
    
    

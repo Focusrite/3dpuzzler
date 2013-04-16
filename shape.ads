@@ -15,16 +15,20 @@
 --|----------------------------------------------------------------------------------------
 
 with Geometry; use Geometry;
-
+with Ada.Unchecked_Deallocation;
 
 package Shape is
    type Shape_Matrix is array(Integer range <>, Integer range <>, Integer range <>) of Boolean;
+   type Shape_Access is access all Shape_Matrix;
+   procedure Free_Vector is new Ada.Unchecked_Deallocation(Object => Shape_Matrix, Name => Shape_Access);
 
    function "=" (Left, Right : Shape_Matrix) return Boolean;
    function "-" (Left, Right : Shape_Matrix) return Shape_Matrix;
    function "+" (Left, Right : Shape_Matrix) return Shape_Matrix;
 
    function Rotate(Shape : Shape_Matrix; Axis : Axis_Enum; Steps : Integer := 1) return Shape_Matrix;
+   function Rotate(Shape : Shape_Matrix; Rotations : Axis_Vector) return Shape_Access; 
+   -- Rotations is a vector with amount of steps along the axis 
    function Overlaps(Shape1, Shape2 : Shape_Matrix) return Boolean;
    function Fits(Shape1, Shape2 : Shape_Matrix) return Boolean;
 
@@ -33,10 +37,12 @@ package Shape is
    function Corner(Shape : Shape_Matrix) return Boolean;
    function Center(Shape : Shape_Matrix) return Axis_Vector;
 
-   function Standardize(Shape : Shape_Matrix; Size, Offset : Axis_Vector) return Shape_Matrix;
+   function Standardize(Shape : Shape_Matrix; I_Size, Offset : Axis_Vector) return Shape_Matrix;
    function Subshape(Shape : Shape_Matrix; Size, Offset : Axis_Vector) return Shape_Matrix;
    function Volume(Shape : Shape_Matrix) return Integer;
    function Size(Shape : Shape_Matrix; Axis : Axis_Enum) return Integer;
+   
+   procedure Put(Shape : in Shape_Matrix);
    
 private
    
